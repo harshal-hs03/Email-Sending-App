@@ -17,8 +17,12 @@ public class EmailSenderService {
     @Autowired
     private JavaMailSender javaMailSender;
 
-    @Value("$spring.mail.username")     // Reading the property username from application.yml file
+    @Value("${spring.mail.username}")     // Reading the property username from application.yml file
     private String fromEmail;
+
+    public String getFromEmail() {
+        return fromEmail;
+    }
 
     public void sendEmail(String toEmail,
                           String subject,

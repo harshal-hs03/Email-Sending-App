@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head id="headId">
     <meta charset="UTF-8">
     <title>Compose Email</title>
@@ -17,16 +17,19 @@
         <form id="game-form"
               action="compose_email"
               method="post">
-            <label for="toEmail">Enter to email id : </label>
-            <input id="toEmail" type="email" name="toEmail"/>
+            <label for="fromEmail">From : </label>
+            <input id="fromEmail" type="email" name="fromEmail" th:value="${fromEmail}" size="30" disabled="disabled"/>
             <br><br>
-            <label for="subject">Enter subject : </label>
-            <input id="subject" type="text" name="subject"/>
+            <label for="toEmail">To : </label>
+            <input id="toEmail" type="email" name="toEmail" size="30"/>
             <br><br>
-            <label for="emailBody">Enter subject : </label>
+            <label for="subject">Subject : </label>
+            <input id="subject" type="text" name="subject" size="30"/>
+            <br><br>
+            <label for="emailBody">Email body : </label>
             <textarea id="emailBody" name="emailBody" rows="10" cols="30"></textarea>
             <br><br>
-            <input type="submit" value="Submit"/>
+            <input type="submit" value="Send"/>
         </form>
 
         <footer id="footerId">

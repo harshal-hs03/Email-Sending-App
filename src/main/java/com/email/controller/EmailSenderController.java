@@ -1,6 +1,7 @@
 package com.email.controller;
 
 import com.email.service.EmailSenderService;
+import com.email.util.AttributeNames;
 import com.email.util.Mappings;
 import com.email.util.ViewNames;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,14 +35,7 @@ public class EmailSenderController {
     // == request methods ==
     @GetMapping(Mappings.COMPOSE_EMAIL)
     public String composeEmail(Model model) {
-//        model.addAttribute(AttributeNames.MAIN_MESSAGE, gameService.getMainMessage());
-//        model.addAttribute(AttributeNames.RESULT_MESSAGE, gameService.getResultMessage());
-//        log.info("model= {}", model);
-//
-//        if(gameService.isGameOver()) {
-//            return ViewNames.GAME_OVER;
-//        }
-
+        model.addAttribute(AttributeNames.FROM_EMAIL, emailSenderService.getFromEmail());
         return ViewNames.COMPOSE_EMAIL;
     }
 
