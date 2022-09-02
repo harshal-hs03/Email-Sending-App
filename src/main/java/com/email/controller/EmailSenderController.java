@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.mail.MessagingException;
+
 @Controller
 public class EmailSenderController {
 
@@ -44,8 +46,18 @@ public class EmailSenderController {
     }
 
     @PostMapping(Mappings.COMPOSE_EMAIL)
-    public String sendEmailMsg(@RequestParam int guess) {
-        System.out.println("guess object returned from front end = "+guess);
+    public String sendEmailMsg(@RequestParam String toEmail,
+                               @RequestParam String subject,
+                               @RequestParam String emailBody) {
+        System.out.println("toEmail object returned from front end = "+toEmail);
+        System.out.println("subject object returned from front end = "+subject);
+        System.out.println("emailBody object returned from front end = "+emailBody);
+
+        try {
+            this.emailSenderService.sendEmail(toEmail, subject, emailBody);
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
 
         return Mappings.REDIRECT_COMPOSE_EMAIL;
     }

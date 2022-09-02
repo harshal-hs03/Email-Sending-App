@@ -15,10 +15,17 @@
         </h3>
 
         <form id="game-form"
-              action="play"
+              action="compose_email"
               method="post">
-            <label for="guess">Enter your guess</label>
-            <input id="guess" type="number" name="guess"/>
+            <label for="toEmail">Enter to email id : </label>
+            <input id="toEmail" type="email" name="toEmail"/>
+            <br><br>
+            <label for="subject">Enter subject : </label>
+            <input id="subject" type="text" name="subject"/>
+            <br><br>
+            <label for="emailBody">Enter subject : </label>
+            <textarea id="emailBody" name="emailBody" rows="10" cols="30"></textarea>
+            <br><br>
             <input type="submit" value="Submit"/>
         </form>
 
