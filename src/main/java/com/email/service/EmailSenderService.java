@@ -54,4 +54,20 @@ public class EmailSenderService {
         String resultMsg = (attachmentFlag) ? "with attachment " : "";
         System.out.println("Email "+ resultMsg +"sent successfully");
     }
+
+    public void clearAttachments(){
+        String UPLOADED_FILES_DIR = System.getProperty("user.dir") + "/src/main/resources/uploads";
+
+        File f= new File(UPLOADED_FILES_DIR);
+        String[] files = f.list();
+        if(files != null) {
+            for (String file : files) {
+                File fileToDelete = new File(UPLOADED_FILES_DIR + "/" + file);
+                if (fileToDelete.delete())
+                    System.out.println("Successfully deleted " + file);
+                else
+                    System.out.println("Unable to delete " + file);
+            }
+        }
+    }
 }
