@@ -49,6 +49,7 @@ public class EmailSenderController {
     @GetMapping(Mappings.COMPOSE_EMAIL)
     public String composeEmail(Model model) {
         model.addAttribute(AttributeNames.FROM_EMAIL, emailSenderService.getFromEmail());
+        model.addAttribute(AttributeNames.SIZE_OF_UPLOADED_DOCS, this.emailSenderService.getSizeOfUploadedAttachments());
         return ViewNames.COMPOSE_EMAIL;
     }
 
@@ -72,25 +73,37 @@ public class EmailSenderController {
             e.printStackTrace();
         } finally {
             this.emailSenderService.clearAttachments();
+            this.emailSenderService.setAttachmentsEmptyFlag(true);
         }
 
         return Mappings.REDIRECT_COMPOSE_EMAIL;
     }
 
-    @GetMapping(Mappings.UPLOAD_FILES) public String displayUploadForm() {
+    @GetMapping(Mappings.UPLOAD_FILES) public String displayUploadForm(Model model) {
+        model.addAttribute(AttributeNames.LIST_OF_UPLOADED_DOCS, this.emailSenderService.getNamesOfUploadedFiles());
+        model.addAttribute(AttributeNames.NO_DOC_PRESENT_FLAG, this.emailSenderService.getAttachmentsEmptyFlag());
         return ViewNames.UPLOAD_FILES;
     }
 
-    @PostMapping(Mappings.UPLOAD_ATTACHMENTS) public String uploadFile(Model model, @RequestParam("file") MultipartFile file) throws IOException {
+    @PostMapping(Mappings.UPLOAD_ATTACHMENTS)
+    public String uploadFile(Model model, @RequestParam("file") MultipartFile file) throws IOException {
         if (file.isEmpty())
-            model.addAttribute(AttributeNames.MSG, "Please select a file to upload!");
+            model.addAttribute(AttributeNames.NO_FILE_MSG, "Please choose a file to upload!");
         else {
             StringBuilder fileNames = new StringBuilder();
             Path fileNameAndPath = Paths.get(UPLOAD_DIRECTORY, file.getOriginalFilename());
             fileNames.append(file.getOriginalFilename());
             Files.write(fileNameAndPath, file.getBytes());
-            model.addAttribute(AttributeNames.MSG, "Uploaded files : " + fileNames.toString());
+            this.emailSenderService.setAttachmentsEmptyFlag(false);
         }
+        model.addAttribute(AttributeNames.LIST_OF_UPLOADED_DOCS, this.emailSenderService.getNamesOfUploadedFiles());
+        model.addAttribute(AttributeNames.NO_DOC_PRESENT_FLAG, this.emailSenderService.getAttachmentsEmptyFlag());
         return ViewNames.UPLOAD_FILES;
+    }
+
+    @GetMapping(Mappings.CLEAR_ATTACHMENTS) public String clearAttachments() {
+        this.emailSenderService.clearAttachments();
+        this.emailSenderService.setAttachmentsEmptyFlag(true);
+        return Mappings.REDIRECT_UPLOAD_FILES;
     }
 }

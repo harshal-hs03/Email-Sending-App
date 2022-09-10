@@ -7,13 +7,7 @@
 <body>
     <div align="center">
         <h1>Compose Email</h1>
-        <h3 id="main-message">
-            Main Message Content
-        </h3>
-        <h3 id="result-message">
-            Result Message Content
-        </h3>
-
+        <br>
         <form id="game-form"
               action="compose_email"
               method="post">
@@ -29,16 +23,25 @@
             <label for="emailBody">Email body : </label>
             <textarea id="emailBody" name="emailBody" rows="10" cols="30"></textarea>
             <br><br>
-            <input type="submit" value="Send"/>
+            <input type="submit" value="Send" onclick="setTimeout(myFunction, 3000);"/>
         </form>
 
         <br><br>
-        <button onclick="window.location='uploadFiles'">Add attachments</button>
+        <button onclick="window.location='uploadFiles'">Attachments</button>
+        <br>
+<!--        <span th:if="${sizeOfUploadedAttachments != 0}" th:text="${sizeOfUploadedAttachments != 1} ? '('+${sizeOfUploadedAttachments}+' attachments uploaded)' : '('+${sizeOfUploadedAttachments}+' attachment uploaded)'"></span>-->
+        <span th:text="'(Total files attached : '+${sizeOfUploadedAttachments}+')'"></span>
 
         <footer id="footerId">
-            <p>Created by goes here</p>
+            <p>Created by Harshal Sakhale</p>
         </footer>
 
     </div>
+
+    <script>
+        function myFunction() {
+          alert('Email sent successfully !');
+        }
+    </script>
 </body>
 </html>

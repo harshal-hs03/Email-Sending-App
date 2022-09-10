@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class EmailSenderService {
@@ -19,6 +21,10 @@ public class EmailSenderService {
 
     @Value("${spring.mail.username}")     // Reading the property username from application.yml file
     private String fromEmail;
+
+    private boolean attachmentsEmptyFlag = true;
+
+    private static final String UPLOADED_FILES_DIR = System.getProperty("user.dir") + "/src/main/resources/uploads";
 
     public String getFromEmail() {
         return fromEmail;
@@ -56,8 +62,6 @@ public class EmailSenderService {
     }
 
     public void clearAttachments(){
-        String UPLOADED_FILES_DIR = System.getProperty("user.dir") + "/src/main/resources/uploads";
-
         File f= new File(UPLOADED_FILES_DIR);
         String[] files = f.list();
         if(files != null) {
@@ -69,5 +73,32 @@ public class EmailSenderService {
                     System.out.println("Unable to delete " + file);
             }
         }
+    }
+
+    public List<String> getNamesOfUploadedFiles(){
+        List<String> listToReturn = new ArrayList<>();
+        File f= new File(UPLOADED_FILES_DIR);
+        String[] files = f.list();
+        if(files != null) {
+            for (String file : files) {
+                File fileToDelete = new File(UPLOADED_FILES_DIR + "/" + file);
+                listToReturn.add(fileToDelete.getName());
+            }
+        }
+        return listToReturn;
+    }
+
+    public int getSizeOfUploadedAttachments(){
+        File f = new File(UPLOADED_FILES_DIR);
+        String[] files = f.list();
+        return (files != null) ? files.length : 0;
+    }
+
+    public boolean getAttachmentsEmptyFlag() {
+        return this.attachmentsEmptyFlag;
+    }
+
+    public void setAttachmentsEmptyFlag(boolean attachmentsEmptyFlag) {
+        this.attachmentsEmptyFlag = attachmentsEmptyFlag;
     }
 }

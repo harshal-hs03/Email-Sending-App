@@ -13,11 +13,13 @@ public class SpringEmailDemoApplication {
 
     @Autowired
     private EmailSenderService emailSenderService;
-    private int randomInt = new Random().nextInt(1000);
+    private final int randomInt = new Random().nextInt(1000);
 
     public static void main(String[] args) {
         SpringApplication.run(SpringEmailDemoApplication.class, args);
     }
+
+    // Below methods are just for base testing purpose, and are not triggered on web application
 
 //    @EventListener(ApplicationReadyEvent.class)
     public void sendMailWithoutAttachment(){

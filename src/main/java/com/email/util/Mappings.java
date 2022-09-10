@@ -9,6 +9,7 @@ public final class Mappings {
     public static final String UPLOAD_ATTACHMENTS = "upload";
     public static final String UPLOAD_FILES = "uploadFiles";
     public static final String REDIRECT_UPLOAD_FILES = "redirect:/" + UPLOAD_FILES;
+    public static final String CLEAR_ATTACHMENTS = "clearAttachments";
 
     // == constructor ==
     private Mappings() {}
