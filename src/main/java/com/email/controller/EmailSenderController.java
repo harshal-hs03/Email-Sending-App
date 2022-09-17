@@ -46,14 +46,14 @@ public class EmailSenderController {
     }
 
     @GetMapping(Mappings.HOME)
-    public String home(OAuth2AuthenticationToken oAuth2AuthenticationToken){
-        Map<String, Object> attributes = oAuth2AuthenticationToken.getPrincipal().getAttributes();
-        System.out.println(attributes.get("email").toString());
+    public String home(){
         return ViewNames.HOME;
     }
 
     @GetMapping(Mappings.COMPOSE_EMAIL)
-    public String composeEmail(Model model) {
+    public String composeEmail(Model model, OAuth2AuthenticationToken oAuth2AuthenticationToken) {
+        Map<String, Object> attributes = oAuth2AuthenticationToken.getPrincipal().getAttributes();
+        System.out.println(attributes.get("email").toString());
         model.addAttribute(AttributeNames.FROM_EMAIL, emailSenderService.getFromEmail());
         model.addAttribute(AttributeNames.SIZE_OF_UPLOADED_DOCS, this.emailSenderService.getSizeOfUploadedAttachments());
         return ViewNames.COMPOSE_EMAIL;
