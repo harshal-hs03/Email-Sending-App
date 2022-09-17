@@ -5,6 +5,7 @@ import com.email.util.AttributeNames;
 import com.email.util.Mappings;
 import com.email.util.ViewNames;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +21,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.Map;
 
 @Controller
 public class EmailSenderController {
@@ -44,7 +46,11 @@ public class EmailSenderController {
     }
 
     @GetMapping(Mappings.HOME)
-    public String home(){ return ViewNames.HOME; }
+    public String home(OAuth2AuthenticationToken oAuth2AuthenticationToken){
+        Map<String, Object> attributes = oAuth2AuthenticationToken.getPrincipal().getAttributes();
+        System.out.println(attributes.get("email").toString());
+        return ViewNames.HOME;
+    }
 
     @GetMapping(Mappings.COMPOSE_EMAIL)
     public String composeEmail(Model model) {
