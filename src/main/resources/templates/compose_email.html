@@ -11,37 +11,101 @@
         <form id="game-form"
               action="compose_email"
               method="post">
+            <fieldset>
+                <legend>Sample Text:</legend>
             <label for="fromEmail">From : </label>
             <input id="fromEmail" type="email" name="fromEmail" th:value="${fromEmail}" size="30" disabled="disabled"/>
             <br><br>
             <label for="toEmail">To : </label>
-            <input id="toEmail" type="email" name="toEmail" size="30"/>
+            <input id="toEmail" type="email" name="toEmail" size="30" placeholder="Add Recipient" required/>
+                <a onclick="showCcBccInputs();" id="cc_bcc_link">Cc Bcc</a><br>
+                <label for="cc" id="cc_label" hidden>Cc : </label>
+                <input id="cc" type="email" name="cc" size="30" placeholder="Cc" hidden/><br>
+                <label for="cc" id="bcc_label" hidden>Bcc : </label>
+                <input id="bcc" type="email" name="bcc" size="30" placeholder="Bcc" hidden/>
             <br><br>
             <label for="subject">Subject : </label>
-            <input id="subject" type="text" name="subject" size="30"/>
+            <input id="subject" type="text" name="subject" size="30" placeholder="Subject Line"/>
             <br><br>
             <label for="emailBody">Email body : </label>
-            <textarea id="emailBody" name="emailBody" rows="10" cols="30"></textarea>
+            <textarea id="emailBody" name="emailBody" rows="10" cols="30" placeholder="Message"></textarea>
             <br><br>
-            <input type="submit" value="Send" onclick="setTimeout(myFunction, 3000);"/>
+            <input type="submit" value="Send" onclick="invokeJS();"/>
+            </fieldset>
         </form>
 
         <br><br>
         <button onclick="window.location='uploadFiles'">Attachments</button>
         <br>
 <!--        <span th:if="${sizeOfUploadedAttachments != 0}" th:text="${sizeOfUploadedAttachments != 1} ? '('+${sizeOfUploadedAttachments}+' attachments uploaded)' : '('+${sizeOfUploadedAttachments}+' attachment uploaded)'"></span>-->
-        <span th:text="'(Total files attached : '+${sizeOfUploadedAttachments}+')'"></span>
-
+        <span th:text="'(Total files attached : '+${sizeOfUploadedAttachments}+')'"></span><br>
         <footer id="footerId">
             <p>Created by Harshal Sakhale</p>
         </footer>
 
     </div>
 
-    <script>
-        function myFunction() {
-          alert('Email sent successfully !');
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script type="text/javascript">
+        function invokeJS(){
+
+<!--    Below will get the value from model attribute passed to this template-->
+            var successFlag = "[[${fromEmail}]]"
+
+            var toEmailText = document.getElementById("toEmail").value
+            var toEmailSize = toEmailText.length
+            var ccMail = $("#cc").val()
+            var ccLen = ccMail.length
+            var bccMail = $("#bcc").val()
+            var bccLen = bccMail.length
+
+            if (toEmailSize == 0) {
+                alert("Recipient field cannot be empty");
+            } else if((toEmailText.includes("@")) && (toEmailText.includes(".")) && (toEmailSize > 5)) {
+                if(ccLen == 0 && bccLen == 0)
+                    setTimeout(successAlert, 3000);
+                else if(!((bccMail.includes("@")) && (bccMail.includes(".")) && (bccLen > 5)) && bccLen != 0)
+                    alert("Enter a valid email address in Bcc")
+                else if(!((ccMail.includes("@")) && (ccMail.includes(".")) && (ccLen > 5)) && ccLen != 0)
+                    alert("Enter a valid email address in Cc")
+                else
+                    setTimeout(successAlert, 3000);
+            } else {
+                alert("Enter a valid email address.");
+            }
+        }
+
+        function successAlert() {
+            alert("Email sent successfully !");
+        }
+
+        function showCcBccInputs(){
+            if($("#cc").prop("hidden")){
+                $('#cc').removeAttr('hidden');
+                $('#bcc').removeAttr('hidden');
+                $('#cc_label').removeAttr('hidden');
+                $('#bcc_label').removeAttr('hidden');
+            } else{
+                $('#cc').prop('hidden', true);
+                $('#bcc').prop('hidden', true);
+                $('#cc_label').prop('hidden', true);
+                $('#bcc_label').prop('hidden', true);
+            }
+<!--                $('#cc').attr('hidden', 'hidden');-->
         }
     </script>
+
+    <style>
+        a {
+          color: blue;
+          background-color: transparent;
+        }
+        a:hover {
+          color: red;
+          cursor: pointer;
+          background-color: transparent;
+          text-decoration: underline;
+        }
+</style>
 </body>
 </html>

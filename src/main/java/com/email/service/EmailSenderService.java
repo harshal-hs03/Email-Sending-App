@@ -31,12 +31,16 @@ public class EmailSenderService {
     }
 
     public void sendEmail(String toEmail,
+                          String cc,
+                          String bcc,
                           String subject,
                           String bodyText) throws MessagingException {
-        sendEmail(toEmail, subject, bodyText, null);
+        sendEmail(toEmail,cc, bcc, subject, bodyText, null);
     }
 
     public void sendEmail(String toEmail,
+                          String cc,
+                          String bcc,
                           String subject,
                           String bodyText,
                           String[] attachments) throws MessagingException {
@@ -47,6 +51,11 @@ public class EmailSenderService {
         mimeMessageHelper.setTo(toEmail);
         mimeMessageHelper.setSubject(subject);
         mimeMessageHelper.setText(bodyText);
+
+        if(cc!=null && cc.length() > 0)
+            mimeMessageHelper.setCc(cc);
+        if(bcc!=null && bcc.length() > 0)
+            mimeMessageHelper.setBcc(bcc);
 
         boolean attachmentFlag = attachments != null && attachments.length > 0;
         if(attachmentFlag){

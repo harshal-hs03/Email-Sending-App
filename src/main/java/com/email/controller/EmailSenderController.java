@@ -62,8 +62,12 @@ public class EmailSenderController {
     @PostMapping(Mappings.COMPOSE_EMAIL)
     public String sendEmailMsg(@RequestParam String toEmail,
                                @RequestParam String subject,
-                               @RequestParam String emailBody) {
+                               @RequestParam String emailBody,
+                               @RequestParam String cc,
+                               @RequestParam String bcc) {
         System.out.println("Objects returned from front end = toEmail = "+toEmail+
+                            " cc = "+cc+
+                            " bcc = "+bcc+
                             " subject = "+subject+
                             " emailBody = "+emailBody);
 
@@ -74,7 +78,7 @@ public class EmailSenderController {
         String[] attachmentArr = (files != null) ? Arrays.stream(files).map(s -> UPLOAD_DIRECTORY + "/" + s).toArray(String[]::new) : null;
 
         try {
-            this.emailSenderService.sendEmail(toEmail, subject, emailBody, attachmentArr);
+            this.emailSenderService.sendEmail(toEmail, cc, bcc, subject, emailBody, attachmentArr);
         } catch (MessagingException e) {
             e.printStackTrace();
         } finally {
