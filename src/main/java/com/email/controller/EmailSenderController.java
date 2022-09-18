@@ -5,6 +5,7 @@ import com.email.util.AttributeNames;
 import com.email.util.Mappings;
 import com.email.util.ViewNames;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +21,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.Map;
 
 @Controller
 public class EmailSenderController {
@@ -44,10 +46,14 @@ public class EmailSenderController {
     }
 
     @GetMapping(Mappings.HOME)
-    public String home(){ return ViewNames.HOME; }
+    public String home(){
+        return ViewNames.HOME;
+    }
 
     @GetMapping(Mappings.COMPOSE_EMAIL)
-    public String composeEmail(Model model) {
+    public String composeEmail(Model model, OAuth2AuthenticationToken oAuth2AuthenticationToken) {
+        Map<String, Object> attributes = oAuth2AuthenticationToken.getPrincipal().getAttributes();
+        System.out.println(attributes.get("email").toString());
         model.addAttribute(AttributeNames.FROM_EMAIL, emailSenderService.getFromEmail());
         model.addAttribute(AttributeNames.SIZE_OF_UPLOADED_DOCS, this.emailSenderService.getSizeOfUploadedAttachments());
         return ViewNames.COMPOSE_EMAIL;
@@ -56,8 +62,12 @@ public class EmailSenderController {
     @PostMapping(Mappings.COMPOSE_EMAIL)
     public String sendEmailMsg(@RequestParam String toEmail,
                                @RequestParam String subject,
-                               @RequestParam String emailBody) {
+                               @RequestParam String emailBody,
+                               @RequestParam String cc,
+                               @RequestParam String bcc) {
         System.out.println("Objects returned from front end = toEmail = "+toEmail+
+                            " cc = "+cc+
+                            " bcc = "+bcc+
                             " subject = "+subject+
                             " emailBody = "+emailBody);
 
@@ -68,7 +78,7 @@ public class EmailSenderController {
         String[] attachmentArr = (files != null) ? Arrays.stream(files).map(s -> UPLOAD_DIRECTORY + "/" + s).toArray(String[]::new) : null;
 
         try {
-            this.emailSenderService.sendEmail(toEmail, subject, emailBody, attachmentArr);
+            this.emailSenderService.sendEmail(toEmail, cc, bcc, subject, emailBody, attachmentArr);
         } catch (MessagingException e) {
             e.printStackTrace();
         } finally {
