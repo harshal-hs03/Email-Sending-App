@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class EmailSenderService {
@@ -17,8 +19,16 @@ public class EmailSenderService {
     @Autowired
     private JavaMailSender javaMailSender;
 
-    @Value("$spring.mail.username")     // Reading the property username from application.yml file
+    @Value("${spring.mail.username}")     // Reading the property username from application.yml file
     private String fromEmail;
+
+    private boolean attachmentsEmptyFlag = true;
+
+    private static final String UPLOADED_FILES_DIR = System.getProperty("user.dir") + "/src/main/resources/uploads";
+
+    public String getFromEmail() {
+        return fromEmail;
+    }
 
     public void sendEmail(String toEmail,
                           String subject,
@@ -49,5 +59,46 @@ public class EmailSenderService {
         javaMailSender.send(mimeMessage);
         String resultMsg = (attachmentFlag) ? "with attachment " : "";
         System.out.println("Email "+ resultMsg +"sent successfully");
+    }
+
+    public void clearAttachments(){
+        File f= new File(UPLOADED_FILES_DIR);
+        String[] files = f.list();
+        if(files != null) {
+            for (String file : files) {
+                File fileToDelete = new File(UPLOADED_FILES_DIR + "/" + file);
+                if (fileToDelete.delete())
+                    System.out.println("Successfully deleted " + file);
+                else
+                    System.out.println("Unable to delete " + file);
+            }
+        }
+    }
+
+    public List<String> getNamesOfUploadedFiles(){
+        List<String> listToReturn = new ArrayList<>();
+        File f= new File(UPLOADED_FILES_DIR);
+        String[] files = f.list();
+        if(files != null) {
+            for (String file : files) {
+                File fileToDelete = new File(UPLOADED_FILES_DIR + "/" + file);
+                listToReturn.add(fileToDelete.getName());
+            }
+        }
+        return listToReturn;
+    }
+
+    public int getSizeOfUploadedAttachments(){
+        File f = new File(UPLOADED_FILES_DIR);
+        String[] files = f.list();
+        return (files != null) ? files.length : 0;
+    }
+
+    public boolean getAttachmentsEmptyFlag() {
+        return this.attachmentsEmptyFlag;
+    }
+
+    public void setAttachmentsEmptyFlag(boolean attachmentsEmptyFlag) {
+        this.attachmentsEmptyFlag = attachmentsEmptyFlag;
     }
 }
