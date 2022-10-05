@@ -2,8 +2,8 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: testemailfirst.testemaillast@gmail.com
-    password: uebcuzagfbjzgqav
+#    username: your_email_id
+#    password: your_password
     properties:
       mail:
         smtp:
@@ -14,7 +14,7 @@ spring:
     multipart:
       max-file-size: 5MB
       max-request-size: 5MB
-  security:
-    user:
-      name: admin
-      password: Password$1
+#  security:
+#    user:
+#      name: username_to_login_to_application
+#      password: password_to_login_to_application
