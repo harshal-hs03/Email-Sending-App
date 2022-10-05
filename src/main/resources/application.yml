@@ -1,9 +1,11 @@
 spring:
+  config:
+    import: optional:secrets.yml
   mail:
     host: smtp.gmail.com
     port: 587
-    username: testemailfirst.testemaillast@gmail.com
-    password: uebcuzagfbjzgqav
+#    username: your_email_id
+#    password: your_password
     properties:
       mail:
         smtp:
@@ -14,10 +16,10 @@ spring:
     multipart:
       max-file-size: 5MB
       max-request-size: 5MB
-  security:
-    oauth2:
-      client:
-        registration:
-          google:
-            client-id: 184949092335-datjduh5u1k29a5u4sd2kkpp7eu8v91i.apps.googleusercontent.com
-            client-secret: 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
+#  security:
+#    oauth2:
+#      client:
+#        registration:
+#          google:
+#            client-id: your-client_id
+#            client-secret: your_client_secret
